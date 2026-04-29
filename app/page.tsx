@@ -4,7 +4,7 @@ import { HomeWithFlow } from "@/components/HomeWithFlow";
 export default function Home() {
   return (
     <div
-      className="relative isolate flex min-h-mobile-screen flex-col text-amber-950"
+      className="relative isolate flex min-h-mobile-screen flex-1 flex-col text-amber-950"
       style={{
         background:
           "linear-gradient(168deg,#ffffff 0%,#fffbeb 18%,#fef9c3 42%,#fde68a 68%,#fdba74 88%,#fb923c 100%)",
