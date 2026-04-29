@@ -50,17 +50,88 @@ export function getAppOrigin(): string {
   );
 }
 
-/** Utilisé côté serveur pour construire des liens absolus (e-mail, etc.). */
-export function getRequestOrigin(req: Request): string {
-  const env = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
-  if (env) return env;
-  const host = req.headers.get("host");
-  if (host) {
-    const localhost = host.startsWith("127.") || host.includes("localhost");
-    const proto =
-      req.headers.get("x-forwarded-proto") ?? (localhost ? "http" : "https");
-    return `${proto}://${host}`;
+function normalizeAppUrl(raw: string | undefined): string {
+  const t = raw?.trim();
+  if (!t) return "";
+  return t.endsWith("/") ? t.slice(0, -1) : t;
+}
+
+function deriveOriginFromRequestHeaders(req: Request): string | null {
+  const xfHost = req.headers
+    .get("x-forwarded-host")
+    ?.split(",")[0]
+    ?.trim();
+  const host = xfHost ?? req.headers.get("host")?.trim();
+  if (!host) return null;
+
+  const hl = host.toLowerCase();
+  const hostLooksLoopback =
+    hl.startsWith("127.") ||
+    hl === "localhost" ||
+    hl.startsWith("localhost:") ||
+    hl.startsWith("[::");
+
+  const xfProto =
+    req.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() ?? "";
+  const proto =
+    xfProto || (hostLooksLoopback ? "http" : "https");
+
+  return `${proto}://${host}`;
+}
+
+function isLoopbackAppUrl(appUrl: string): boolean {
+  try {
+    const u = new URL(appUrl);
+    const h = u.hostname.toLowerCase();
+    return (
+      h === "localhost" ||
+      h.endsWith(".localhost") ||
+      h === "127.0.0.1" ||
+      h === "[::1]"
+    );
+  } catch {
+    return false;
   }
+}
+
+function sameOrigin(a: string, b: string): boolean {
+  try {
+    return new URL(a).origin === new URL(b).origin;
+  } catch {
+    return normalizeAppUrl(a) === normalizeAppUrl(b);
+  }
+}
+
+/**
+ * Origine absolue pour les liens générés côté serveur (ex. mail « Dévoiler le lot »).
+ *
+ * En **développement**, si `NEXT_PUBLIC_APP_URL` vise `localhost` mais que le client
+ * appelle l’API depuis le réseau local (`http://192.168.x.x:3000`), on utilise l’hôte
+ * de la requête — sinon le mail contiendrait `localhost`, injoignable depuis un téléphone.
+ * En prod, l’URL figée dans l’ENV gagne lorsqu’elle n’est pas limitée au loopback.
+ */
+export function getRequestOrigin(req: Request): string {
+  const envUrl = normalizeAppUrl(process.env.NEXT_PUBLIC_APP_URL);
+  const fromReq = deriveOriginFromRequestHeaders(req);
+
+  if (envUrl) {
+    const envIsLoopback = isLoopbackAppUrl(envUrl);
+    if (
+      process.env.NODE_ENV === "development" &&
+      envIsLoopback &&
+      fromReq &&
+      !sameOrigin(envUrl, fromReq)
+    ) {
+      console.info(
+        "[getRequestOrigin] dev : lien absolu depuis l’hôte réel de la requête (pas localhost).",
+      );
+      return fromReq;
+    }
+    return envUrl;
+  }
+
+  if (fromReq) return fromReq;
+
   return process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000";
