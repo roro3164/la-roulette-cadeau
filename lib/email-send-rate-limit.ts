@@ -11,12 +11,18 @@ function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-/** Fenêtre depuis la dernière envoi réussie. */
+/**
+ * Fenêtre entre deux envois au même adresse.
+ * `RATE_LIMIT_EMAIL_MS=0` : désactivation (démo / tests uniquement).
+ * Sinon défaut **24 h** — à remettre pour la mise en ligne clients (`86400000`).
+ */
 export function getEmailSendCooldownMs(): number {
-  const raw = process.env.RATE_LIMIT_EMAIL_MS;
+  const raw = process.env.RATE_LIMIT_EMAIL_MS?.trim();
   if (raw === undefined || raw === "") return 86400_000; /* 24 h */
   const n = Number.parseInt(raw, 10);
-  if (!Number.isFinite(n) || n < 60000) return 86400_000;
+  if (!Number.isFinite(n)) return 86400_000;
+  if (n === 0) return 0;
+  if (n < 60000) return 86400_000;
   const maxMs = Number.parseInt(
     process.env.RATE_LIMIT_EMAIL_MAX_MS ?? "604800000",
     10,
@@ -30,8 +36,10 @@ export function getEmailSendCooldownMs(): number {
 export function canSendGiftEmail(email: string): {
   ok: true;
 } | { ok: false; retryAfterSeconds: number } {
-  const key = normalizeEmail(email);
   const cooldown = getEmailSendCooldownMs();
+  if (cooldown <= 0) return { ok: true };
+
+  const key = normalizeEmail(email);
   const last = store.get(key);
   const now = Date.now();
   if (last !== undefined && now - last.lastSentAt < cooldown) {

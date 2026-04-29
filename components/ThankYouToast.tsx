@@ -1,20 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-
 type Props = {
   onDismiss: () => void;
 };
 
 /**
- * Petit pop après envoi réel du bon — style carte claire façon jeu mobile.
+ * Petit pop après envoi réel du bon — reste affiché jusqu’au toucher sur l’arrière-plan.
  */
 export function ThankYouToast({ onDismiss }: Props) {
-  useEffect(() => {
-    const t = window.setTimeout(onDismiss, 5000);
-    return () => window.clearTimeout(t);
-  }, [onDismiss]);
-
   return (
     <div
       role="dialog"
@@ -34,17 +27,13 @@ export function ThankYouToast({ onDismiss }: Props) {
           id="toast-merci"
           className="mt-4 text-xl font-extrabold leading-snug text-amber-950"
         >
-          Merci pour votre participation, à bientôt&nbsp;!
+          Merci pour votre participation&nbsp;!
         </p>
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="mt-6 min-h-[48px] w-full touch-manipulation rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/35 transition hover:brightness-105 active:scale-[0.99]"
-        >
-          Continuer
-        </button>
-        <p className="mt-4 text-[11px] text-amber-800/50">
-          Vous pouvez aussi toucher l’arrière-plan pour fermer.
+        <p className="mt-3 text-[14px] leading-snug text-amber-900/85">
+          Vous allez recevoir votre cadeau par e-mail.
+        </p>
+        <p className="mt-6 text-[11px] text-amber-800/50">
+          Touchez l’arrière-plan pour fermer.
         </p>
       </div>
     </div>
