@@ -88,10 +88,11 @@ export async function POST(req: Request) {
     console.error(
       "[send-gift] RESEND_API_KEY manquante — renseignez-la dans .env.local (voir .env.example) puis redémarrez le serveur.",
     );
-    return Response.json(
-      { error: SEND_GIFT.serviceUnavailable },
-      { status: 503 },
-    );
+    const errMsg =
+      process.env.NODE_ENV === "development"
+        ? "Serveur sans clé Resend : mettez une seule ligne RESEND_API_KEY=re_… dans .env.local (pas de ligne vide avant), puis redémarrez npm run dev."
+        : SEND_GIFT.serviceUnavailable;
+    return Response.json({ error: errMsg }, { status: 503 });
   }
 
   const origin = getRequestOrigin(req);

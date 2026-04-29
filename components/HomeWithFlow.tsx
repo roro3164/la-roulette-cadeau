@@ -43,9 +43,7 @@ export function HomeWithFlow() {
               </span>
             </p>
             <p className="mx-auto mt-4 max-w-[24rem] text-[13px] leading-relaxed text-orange-950/72 sm:text-[14px]">
-              Un petit avis sur Google nous aide vraiment — merci d’avance&nbsp;!
-              Ensuite, à vous de jouer : en cas de gain, le bon vous est envoyé par
-              e-mail.
+              Un petit avis sur Google aide le lieu. Ensuite, tournez la roue&nbsp;: si vous gagnez, le bon part par e-mail.
             </p>
           </>
         ) : null}

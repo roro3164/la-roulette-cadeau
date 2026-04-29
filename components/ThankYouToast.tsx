@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { NEXT_VISIT_PRIZE_NOTE } from "@/lib/wheel-segments";
 
 type Props = {
   onDismiss: () => void;
@@ -12,7 +11,7 @@ type Props = {
  */
 export function ThankYouToast({ onDismiss }: Props) {
   useEffect(() => {
-    const t = window.setTimeout(onDismiss, 4500);
+    const t = window.setTimeout(onDismiss, 6000);
     return () => window.clearTimeout(t);
   }, [onDismiss]);
 
@@ -38,10 +37,10 @@ export function ThankYouToast({ onDismiss }: Props) {
           Bon envoyé !
         </p>
         <p className="mt-3 text-[15px] leading-relaxed text-amber-900/78">
-          {NEXT_VISIT_PRIZE_NOTE} Regardez aussi vos courriers indésirables si rien n’apparaît.
+          Vous recevrez le lien du bon dans vos e-mails sous peu. Pensez aussi aux indésirables.
         </p>
         <p className="mt-6 text-xs font-medium text-amber-800/55">
-          Appuyez hors de cette fenêtre pour continuer · fermeture auto
+          Toucher en dehors ferme · fermeture automatique
         </p>
       </div>
     </div>

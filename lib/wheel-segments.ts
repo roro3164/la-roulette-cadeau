@@ -1,16 +1,16 @@
 /** 6 lots — `cafe.png` / `boisson.png` utilisés deux fois avec des libellés distincts. */
 
-export const NEXT_VISIT_PRIZE_NOTE = "À utiliser lors de votre prochaine visite.";
+export const NEXT_VISIT_PRIZE_NOTE = "À valider lors de votre prochaine visite.";
 
 export const WHEEL_SEGMENTS = [
   {
-    label: "-20 % sur un cadeau",
+    label: "-20 % lors de votre prochaine visite",
     src: "/wheel/cadeau.png",
   },
   { label: "Dessert", src: "/wheel/dessert.png" },
   { label: "Café offert", src: "/wheel/cafe.png" },
   { label: "Boisson", src: "/wheel/boisson.png" },
-  { label: "Autre café", src: "/wheel/cafe.png" },
+  { label: "Café", src: "/wheel/cafe.png" },
   { label: "Autre boisson", src: "/wheel/boisson.png" },
 ] as const;
 

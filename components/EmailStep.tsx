@@ -96,8 +96,7 @@ export function EmailStep({ prizeLabel, onBack, onSuccess }: Props) {
             </div>
           </div>
           <p className="mt-5 text-[13px] leading-relaxed text-amber-900/78">
-            Renseignez votre e-mail ci-dessous pour recevoir le bon. Montrez-le à
-            l’équipe le jour J.
+            Indiquez votre e-mail — vous recevrez le bon à montrer au comptoir.
           </p>
           <label className="mt-4 block text-xs font-semibold uppercase tracking-wide text-amber-800/70">
             E-mail <span className="normal-case opacity-75">*</span>

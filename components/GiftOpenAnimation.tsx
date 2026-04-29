@@ -21,6 +21,8 @@ function formatOpenedFrFromIso(iso: string): string | null {
 
 export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
   const [opened, setOpened] = useState(false);
+  /** True si au chargement l’API indiquait déjà une première ouverture (lien revisité). */
+  const [revisitFromPeek, setRevisitFromPeek] = useState(false);
   const [openedLine, setOpenedLine] = useState<string | null>(null);
   const [peekBusy, setPeekBusy] = useState(true);
   const [openingBusy, setOpeningBusy] = useState(false);
@@ -43,6 +45,7 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
         if (label) {
           setOpenedLine(`Ouvert le ${label}`);
           setOpened(true);
+          setRevisitFromPeek(true);
         }
       } finally {
         if (!cancelled) setPeekBusy(false);
@@ -154,6 +157,9 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
           >
             {openingBusy ? "Enregistrement…" : "Touchez le paquet pour voir votre lot"}
           </motion.p>
+          <p className="max-w-[20rem] text-center text-[12px] leading-snug text-amber-900/72">
+            Une seule ouverture enregistrée par lien&nbsp;; la date et l’heure s’affichent ensuite si vous y revenez.
+          </p>
         </motion.div>
       ) : (
         <motion.div
@@ -211,6 +217,21 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
               </motion.span>
             </div>
           </motion.div>
+          {revisitFromPeek ? (
+            <motion.div
+              className="flex flex-col items-center gap-2"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.04 }}
+            >
+              <span className="rounded-full bg-orange-200/95 px-4 py-2 text-[12px] font-black uppercase tracking-[0.08em] text-orange-950 shadow-sm ring-2 ring-orange-400/40">
+                Déjà ouvert
+              </span>
+              {openedLine ? (
+                <p className="text-[15px] font-semibold leading-snug text-amber-950">{openedLine}</p>
+              ) : null}
+            </motion.div>
+          ) : null}
           <motion.h1
             className="text-2xl font-bold tracking-tight text-amber-950 sm:text-3xl"
             initial={{ opacity: 0, y: 8 }}
@@ -235,8 +256,8 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
           >
             {NEXT_VISIT_PRIZE_NOTE}
           </motion.p>
-          {openedLine ? (
-            <p className="text-sm font-medium text-amber-900/72">{openedLine}</p>
+          {!revisitFromPeek && openedLine ? (
+            <p className="text-[15px] font-semibold text-amber-950">{openedLine}</p>
           ) : null}
         </motion.div>
       )}
