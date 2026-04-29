@@ -11,7 +11,7 @@ type Props = {
  */
 export function ThankYouToast({ onDismiss }: Props) {
   useEffect(() => {
-    const t = window.setTimeout(onDismiss, 6000);
+    const t = window.setTimeout(onDismiss, 5000);
     return () => window.clearTimeout(t);
   }, [onDismiss]);
 
@@ -39,7 +39,16 @@ export function ThankYouToast({ onDismiss }: Props) {
         <p className="mt-3 text-[15px] leading-snug text-amber-900/82">
           À bientôt — le bon vous a été envoyé par e-mail.
         </p>
-        <p className="mt-5 text-[11px] text-amber-800/50">Touchez l’arrière-plan pour fermer</p>
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="mt-6 min-h-[48px] w-full touch-manipulation rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/35 transition hover:brightness-105 active:scale-[0.99]"
+        >
+          Continuer
+        </button>
+        <p className="mt-4 text-[11px] text-amber-800/50">
+          Vous pouvez aussi toucher l’arrière-plan pour fermer.
+        </p>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
-import { Redis } from "@upstash/redis";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { GIFT_LINK_MAX_AGE_MS } from "@/lib/gift-config";
+import { getGiftRedis } from "@/lib/gift-redis";
 
 /** Clé stable pour un lien cadeau (après vérif JWT). Évite collisions entre deux envois. */
 export function giftOpenStableKey(part: {
@@ -67,23 +67,6 @@ function touchFirstOpenMsFile(stableKey: string): {
   return { openedAtMs: now, wasFirstOpen: true };
 }
 
-function hasUpstashEnv(): boolean {
-  return Boolean(
-    process.env.UPSTASH_REDIS_REST_URL?.trim() &&
-      process.env.UPSTASH_REDIS_REST_TOKEN?.trim(),
-  );
-}
-
-let redisSingleton: Redis | null = null;
-
-function getRedis(): Redis | null {
-  if (!hasUpstashEnv()) return null;
-  if (!redisSingleton) {
-    redisSingleton = Redis.fromEnv();
-  }
-  return redisSingleton;
-}
-
 /** Durée de rétention des clés (alignée sur validité lien cadeau). */
 const REDIS_OPEN_TTL_SEC = Math.ceil(GIFT_LINK_MAX_AGE_MS / 1000);
 
@@ -99,7 +82,7 @@ function parseMsStored(raw: unknown): number | undefined {
 async function peekOpenedAtMsRedis(
   stableKey: string,
 ): Promise<number | undefined> {
-  const r = getRedis();
+  const r = getGiftRedis();
   if (!r) return undefined;
   const raw = await r.get<string | number>(`${REDIS_KEY_PREFIX}${stableKey}`);
   return raw === undefined || raw === null
@@ -111,7 +94,7 @@ async function touchFirstOpenMsRedis(stableKey: string): Promise<{
   openedAtMs: number;
   wasFirstOpen: boolean;
 }> {
-  const r = getRedis()!;
+  const r = getGiftRedis()!;
   const redisKey = `${REDIS_KEY_PREFIX}${stableKey}`;
   const existing = parseMsStored(await r.get(`${redisKey}`));
   if (existing !== undefined) {
@@ -138,7 +121,7 @@ async function touchFirstOpenMsRedis(stableKey: string): Promise<{
 export async function peekOpenedAtMs(
   stableKey: string,
 ): Promise<number | undefined> {
-  const r = getRedis();
+  const r = getGiftRedis();
   if (r) {
     return peekOpenedAtMsRedis(stableKey);
   }
@@ -150,7 +133,7 @@ export async function touchFirstOpenMs(stableKey: string): Promise<{
   openedAtMs: number;
   wasFirstOpen: boolean;
 }> {
-  const r = getRedis();
+  const r = getGiftRedis();
   if (r) {
     return touchFirstOpenMsRedis(stableKey);
   }

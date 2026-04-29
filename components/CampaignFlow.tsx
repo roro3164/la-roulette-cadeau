@@ -71,7 +71,8 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
     }
   }, []);
 
-  const suppressWin = step === "email" || step === "thanks";
+  const suppressWin =
+    step === "email" || step === "thanks" || step === "finished";
   const wonLabel =
     wonIndex !== null ? WHEEL_SEGMENTS[wonIndex].label : "";
 
@@ -96,7 +97,10 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
   }, []);
 
   const showWheel =
-    step === "wheel" || step === "email" || step === "thanks";
+    step === "wheel" ||
+    step === "email" ||
+    step === "thanks" ||
+    step === "finished";
 
   /** Repart depuis l’étape « avis Google » (efface cookie + marque locale). */
   const restartParticipation = useCallback(async () => {
@@ -132,7 +136,9 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
         <Wheel
           key={wheelKey}
           suppressWinPresentation={suppressWin}
-          suppressSpinButton={step === "email" || step === "thanks"}
+          suppressSpinButton={
+            step === "email" || step === "thanks" || step === "finished"
+          }
           onSpinComplete={onSpinComplete}
           onContinueAfterWin={onContinueAfterWin}
         />

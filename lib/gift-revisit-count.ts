@@ -1,7 +1,7 @@
-import { Redis } from "@upstash/redis";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import { GIFT_LINK_MAX_AGE_MS } from "@/lib/gift-config";
+import { getGiftRedis } from "@/lib/gift-redis";
 
 const DATA_REV = ["data", "gift-revisit-peeks.json"] as const;
 const REV_REDIS_PREFIX = "lrc:gifrev:";
@@ -36,23 +36,6 @@ function saveRevFile(map: Record<string, number>): void {
   writeFileSync(revDataPath(), JSON.stringify(map), "utf8");
 }
 
-function hasUpstashEnv(): boolean {
-  return Boolean(
-    process.env.UPSTASH_REDIS_REST_URL?.trim() &&
-      process.env.UPSTASH_REDIS_REST_TOKEN?.trim(),
-  );
-}
-
-let redisSingleton: Redis | null = null;
-
-function getRedis(): Redis | null {
-  if (!hasUpstashEnv()) return null;
-  if (!redisSingleton) {
-    redisSingleton = Redis.fromEnv();
-  }
-  return redisSingleton;
-}
-
 /**
  * Incrémente le nombre de « retours » sur le lien une fois le cadeau déjà ouvert (appels peek).
  * À appeler uniquement quand une première ouverture est déjà enregistrée.
@@ -60,7 +43,7 @@ function getRedis(): Redis | null {
 export async function incrementRevisitPeekCount(
   stableKey: string,
 ): Promise<number> {
-  const r = getRedis();
+  const r = getGiftRedis();
   if (r) {
     const k = `${REV_REDIS_PREFIX}${stableKey}`;
     const n = await r.incr(k);
