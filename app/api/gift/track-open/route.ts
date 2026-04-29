@@ -5,7 +5,10 @@ import {
   touchFirstOpenMs,
 } from "@/lib/gift-open-store";
 import { incrementRevisitPeekCount } from "@/lib/gift-revisit-count";
-import { verifyGiftToken } from "@/lib/gift-token";
+import {
+  normalizeGiftTokenFromQuery,
+  verifyGiftTokenResult,
+} from "@/lib/gift-token";
 
 const MAX_BODY = 8192;
 
@@ -30,16 +33,19 @@ export async function POST(req: Request) {
     return Response.json({ error: "Demande invalide" }, { status: 400 });
   }
 
-  const token =
+  const tokenRaw =
     typeof json.token === "string" ? json.token.trim().slice(0, 8096) : "";
+  const token = tokenRaw ? normalizeGiftTokenFromQuery(tokenRaw) : "";
   if (!token) {
     return Response.json({ error: "Lien incomplet." }, { status: 400 });
   }
 
-  const payload = verifyGiftToken(token, GIFT_LINK_MAX_AGE_MS);
-  if (!payload) {
+  const vr = verifyGiftTokenResult(token, GIFT_LINK_MAX_AGE_MS);
+  if (!vr.ok) {
+    console.error("[track-open] jeton invalide:", vr.failure);
     return Response.json({ error: "Lien invalide ou expiré." }, { status: 403 });
   }
+  const payload = vr.payload;
 
   const intentRaw =
     typeof json.intent === "string" ? json.intent.trim().toLowerCase() : "";

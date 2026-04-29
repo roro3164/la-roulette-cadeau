@@ -1,9 +1,26 @@
 import Link from "next/link";
 import { GiftOpenAnimation } from "@/components/GiftOpenAnimation";
 import { GIFT_LINK_MAX_AGE_MS } from "@/lib/gift-config";
-import { verifyGiftToken } from "@/lib/gift-token";
+import {
+  normalizeGiftTokenFromQuery,
+  verifyGiftTokenResult,
+  type GiftTokenFailure,
+} from "@/lib/gift-token";
 
 type SearchParams = { token?: string | string[] };
+
+function messageEtenduPourEchec(failure: GiftTokenFailure): string {
+  switch (failure) {
+    case "expired":
+      return "Ce lien a dépassé la durée prévue depuis l’envoi du mail. Une nouvelle participation depuis la roulette est nécessaire.";
+    case "format":
+      return "Le lien semble incomplet ou modifié. Ouvrez le bouton « Dévoiler le lot » directement depuis l’e-mail, sans recopier une longue adresse.";
+    case "bad_signature":
+      return "Ce lien ne correspond pas à cette version du site ou a été envoyé depuis un autre environnement : rejouez sur le site officiel et ouvrez le nouveau mail depuis son bouton.";
+    default:
+      return "Ce lien n’est pas reconnu. Réessayez depuis la page d’accueil ou demandez au comptoir.";
+  }
+}
 
 export default async function OuvrirCadeauPage({
   searchParams,
@@ -12,7 +29,8 @@ export default async function OuvrirCadeauPage({
 }) {
   const sp = await searchParams;
   const raw = sp.token;
-  const tokenStr = Array.isArray(raw) ? raw[0] : raw;
+  const brut = typeof raw === "string" ? raw : Array.isArray(raw) ? raw[0] : "";
+  const tokenStr = brut ? normalizeGiftTokenFromQuery(brut) : "";
 
   if (!tokenStr) {
     return (
@@ -20,15 +38,22 @@ export default async function OuvrirCadeauPage({
     );
   }
 
-  const payload = verifyGiftToken(tokenStr, GIFT_LINK_MAX_AGE_MS);
-  if (!payload) {
-    return <InvalidToken message="Ce lien n’est plus valide. Nouvelle tentative depuis la page d’accueil." />;
+  const result = verifyGiftTokenResult(tokenStr, GIFT_LINK_MAX_AGE_MS);
+  if (!result.ok) {
+    const hint =
+      result.failure === "bad_signature"
+        ? " (cause fréquente : secret GIFT_TOKEN_SECRET différent entre envoi du mail et ce site)"
+        : "";
+    console.error(`[cadeau/ouvrir] jeton refusé: ${result.failure}${hint}`);
+    return (
+      <InvalidToken message={messageEtenduPourEchec(result.failure)} />
+    );
   }
 
   return (
     <div className="flex min-h-mobile-screen w-full flex-1 flex-col bg-gradient-to-b from-amber-50 to-orange-100/70 text-amber-950">
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col">
-        <GiftOpenAnimation prizeLabel={payload.prize} trackingToken={tokenStr} />
+        <GiftOpenAnimation prizeLabel={result.payload.prize} trackingToken={tokenStr} />
       </main>
     </div>
   );
