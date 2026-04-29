@@ -22,5 +22,67 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/**
+ * Hauteur « plein écran » mobile : 100svh évite les sauts sous barres iOS/Android,
+ * puis 100dvh pour les navigateurs qui gèrent la barre dynamique.
+ */
+.min-h-mobile-screen {
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+/* Bruine très légère sur fond blanc */
+.playful-dots {
+  background-image:
+    radial-gradient(circle at 92% 98%, rgba(253, 186, 116, 0.12) 0, transparent 36%),
+    radial-gradient(circle at 106% 86%, rgba(251, 191, 36, 0.08) 0, transparent 40%),
+    radial-gradient(circle at 118% 52%, rgba(254, 215, 170, 0.06) 0, transparent 45%);
+}
+
+/* Blobs décoratifs (voir components/DecorBlobs.tsx) */
+@keyframes blob-float-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 0.92;
+  }
+  33% {
+    transform: translate(12%, 14%) scale(1.06) rotate(8deg);
+    opacity: 1;
+  }
+  66% {
+    transform: translate(-10%, -8%) scale(0.97) rotate(-6deg);
+    opacity: 0.84;
+  }
+}
+
+@keyframes blob-float-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.88;
+  }
+  50% {
+    transform: translate(-14%, 10%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes blob-float-c {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1.03) rotate(0deg);
+    opacity: 0.85;
+  }
+  45% {
+    transform: translate(8%, -12%) scale(1.08) rotate(5deg);
+    opacity: 1;
+  }
+  72% {
+    transform: translate(-6%, 6%) scale(0.98) rotate(-4deg);
+    opacity: 0.92;
+  }
 }
