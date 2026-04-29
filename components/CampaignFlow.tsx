@@ -168,19 +168,6 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
           </button>
         </div>
       ) : null}
-
-      {isDev ? (
-        <div className="fixed bottom-[5.125rem] left-[max(0.5rem,env(safe-area-inset-left))] z-[20001]">
-          <button
-            type="button"
-            onClick={() => void restartParticipation()}
-            disabled={restartBusy}
-            className="rounded-md border border-amber-400/70 bg-orange-950/85 px-2 py-1 font-mono text-[11px] text-amber-100 shadow-lg backdrop-blur-sm hover:bg-orange-950 disabled:opacity-60"
-          >
-            [dev] Réinitialiser session
-          </button>
-        </div>
-      ) : null}
     </>
   );
 }

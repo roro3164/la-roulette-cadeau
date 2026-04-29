@@ -15,7 +15,7 @@ export const RIM_IN = 170;
 export const RIM_CENTER_R = (RIM_IN + RIM_OUT) / 2;
 export const RIM_STROKE = RIM_OUT - RIM_IN;
 
-/** Disque tournant : les parts s’arrêtent légèrement sous le rebord. */
-export const DISC_R = 169.2;
+/** Disque jusqu’à l’anneau intérieur de la jante : pas de bande crème sous le métal décoratif. */
+export const DISC_R = RIM_IN;
 export const DISC_TEXT_R = 112;
 export const DISC_HUB_R = 24;

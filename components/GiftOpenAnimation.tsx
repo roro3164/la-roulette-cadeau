@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { BistrotLogo } from "@/components/BistrotLogo";
 import { NEXT_VISIT_PRIZE_NOTE, prizeSrcForLabel } from "@/lib/wheel-segments";
 
 type Props = {
@@ -91,6 +92,8 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 py-12 pb-[max(3rem,env(safe-area-inset-bottom,0px))] pt-[max(2.5rem,env(safe-area-inset-top,0px))] sm:py-16">
+      <BistrotLogo className="mb-8 max-h-20 w-auto max-w-[min(280px,_90vw)] object-contain sm:mb-10 sm:max-h-[5.5rem]" />
+
       {peekBusy && !opened ? (
         <p className="mb-6 text-sm text-amber-800/65">Chargement…</p>
       ) : null}
@@ -106,7 +109,7 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
             className="relative cursor-pointer select-none"
             role="button"
             tabIndex={0}
-            aria-label="Ouvrir le cadeau"
+            aria-label="Ouvrir le cadeau devant le personnel"
             onClick={() => {
               if (peekBusy || openingBusy) return;
               void finalizeOpenFromClick();
@@ -152,12 +155,21 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
             </motion.div>
           </div>
           <motion.p
-            className="text-center text-[15px] font-medium text-amber-950/85"
+            className="max-w-[min(22rem,_92vw)] text-center text-[14px] font-medium leading-snug text-amber-950/85 sm:text-[15px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            {openingBusy ? "Enregistrement…" : "Touchez le paquet pour voir votre lot"}
+            {openingBusy ? (
+              "Enregistrement…"
+            ) : (
+              <>
+                <span className="font-extrabold uppercase tracking-[0.06em] text-amber-950">
+                  Attention
+                </span>{" "}
+                Cliquez sur le cadeau devant notre personnel pour bénéficier de votre cadeau.
+              </>
+            )}
           </motion.p>
         </motion.div>
       ) : (

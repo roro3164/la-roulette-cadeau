@@ -13,10 +13,17 @@ function normalizeEmail(email: string): string {
 
 /**
  * Fenêtre entre deux envois au même adresse.
- * `RATE_LIMIT_EMAIL_MS=0` : désactivation (démo / tests uniquement).
- * Sinon défaut **24 h** — à remettre pour la mise en ligne clients (`86400000`).
+ *
+ * Démo (**`NEXT_PUBLIC_DEMO_REPLAY=true`**) : désactivé automatiquement (plusieurs bons /
+ * tests sur la même adresse sans toucher aux variables serveur).
+ *
+ * Sinon **`RATE_LIMIT_EMAIL_MS=0`** désactive aussi (tests avancés).
+ * Défaut **24 h** — production clients&nbsp;: garder ainsi ou `RATE_LIMIT_EMAIL_MS=86400000`.
  */
 export function getEmailSendCooldownMs(): number {
+  if (process.env.NEXT_PUBLIC_DEMO_REPLAY === "true") {
+    return 0;
+  }
   const raw = process.env.RATE_LIMIT_EMAIL_MS?.trim();
   if (raw === undefined || raw === "") return 86400_000; /* 24 h */
   const n = Number.parseInt(raw, 10);

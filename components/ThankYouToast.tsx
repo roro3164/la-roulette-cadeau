@@ -1,5 +1,7 @@
 "use client";
 
+import { BistrotLogo } from "@/components/BistrotLogo";
+
 type Props = {
   onDismiss: () => void;
 };
@@ -20,6 +22,7 @@ export function ThankYouToast({ onDismiss }: Props) {
         className="max-w-sm cursor-default rounded-[1.75rem] border-2 border-amber-200/90 bg-white px-8 py-9 text-center shadow-[0_28px_48px_-18px_rgba(194,65,12,0.2)]"
         onClick={(e) => e.stopPropagation()}
       >
+        <BistrotLogo className="mx-auto mb-4 w-auto max-h-28 max-w-[min(340px,_92%)] object-contain object-center sm:max-h-32" />
         <p className="text-3xl leading-none" aria-hidden>
           ✅
         </p>

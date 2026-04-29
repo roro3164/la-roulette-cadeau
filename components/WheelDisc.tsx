@@ -1,4 +1,7 @@
+"use client";
 
+
+import { motion } from "framer-motion";
 import type { WheelSegment } from "@/lib/wheel-segments";
 import {
   DISC_HUB_R,
@@ -39,12 +42,22 @@ const CASE_YELLOW = "#facc15";
 /** Encre brun chaud pour contours (style dessin, sans noir). */
 const INK = "#9a3412";
 
+/** Même jeu qu’entre les rayons centraux : liséré brun + bande crème (#fffbeb). */
+const RADIAL_STROKE_INK = 14;
+const RADIAL_STROKE_WHITE = 12.5;
+
+/** Grande couronne périmétrique : crème ~moitié de l’ancienne épaisseur ; chemin calé pour coller à l’extérieur (bord ext. brun = DISC_R). */
+const OUTER_RING_INK = 6;
+const OUTER_RING_WHITE = 5.125;
+
 function wedgeFill(i: number): string {
   return i % 2 === 0 ? CASE_YELLOW : CASE_ORANGE;
 }
 
 export function WheelDisc({ segments }: Props) {
   const n = segments.length;
+  /** Bord extérieur du liséré brun tangent à l’arc des parts (DISC_R). */
+  const outerRingR = DISC_R - OUTER_RING_INK / 2;
 
   return (
     <svg
@@ -77,7 +90,7 @@ export function WheelDisc({ segments }: Props) {
                 x2={pOut.x}
                 y2={pOut.y}
                 stroke={INK}
-                strokeWidth="14"
+                strokeWidth={RADIAL_STROKE_INK}
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
               />
@@ -87,7 +100,7 @@ export function WheelDisc({ segments }: Props) {
                 x2={pOut.x}
                 y2={pOut.y}
                 stroke="#fffbeb"
-                strokeWidth="12.5"
+                strokeWidth={RADIAL_STROKE_WHITE}
                 strokeLinecap="round"
                 vectorEffect="non-scaling-stroke"
               />
@@ -98,19 +111,19 @@ export function WheelDisc({ segments }: Props) {
         <circle
           cx={CX}
           cy={CY}
-          r={DISC_R - 0.15}
+          r={outerRingR}
           fill="none"
           stroke={INK}
-          strokeWidth="5.2"
+          strokeWidth={OUTER_RING_INK}
           className="pointer-events-none"
         />
         <circle
           cx={CX}
           cy={CY}
-          r={DISC_R - 0.45}
+          r={outerRingR}
           fill="none"
           stroke="#fffbeb"
-          strokeWidth="3.4"
+          strokeWidth={OUTER_RING_WHITE}
           className="pointer-events-none"
         />
       </g>
@@ -125,23 +138,36 @@ export function WheelDisc({ segments }: Props) {
             transform={`translate(${x},${y}) rotate(${a})`}
           >
             <title>{seg.label}</title>
-            <svg
-              x={-art / 2}
-              y={-art / 2}
-              width={art}
-              height={art}
-              viewBox="0 0 200 200"
-              aria-hidden
+            <motion.g
+              animate={{
+                rotate: [0, 3.5, -2.8, 0],
+                scale: [1, 1.08, 0.96, 1],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 1.85 + i * 0.07,
+                ease: "easeInOut",
+                delay: i * 0.05,
+              }}
             >
-              <image
-                href={seg.src}
-                width={200}
-                height={200}
-                x={0}
-                y={0}
-                preserveAspectRatio="xMidYMid meet"
-              />
-            </svg>
+              <svg
+                x={-art / 2}
+                y={-art / 2}
+                width={art}
+                height={art}
+                viewBox="0 0 200 200"
+                aria-hidden
+              >
+                <image
+                  href={seg.src}
+                  width={200}
+                  height={200}
+                  x={0}
+                  y={0}
+                  preserveAspectRatio="xMidYMid meet"
+                />
+              </svg>
+            </motion.g>
           </g>
         );
       })}
@@ -153,7 +179,7 @@ export function WheelDisc({ segments }: Props) {
           r={DISC_HUB_R + 0.35}
           fill="none"
           stroke={INK}
-          strokeWidth="3.2"
+          strokeWidth="4.65"
         />
         <circle
           cx={CX}
@@ -161,7 +187,7 @@ export function WheelDisc({ segments }: Props) {
           r={DISC_HUB_R}
           fill="#fffbeb"
           stroke="#fbbf24"
-          strokeWidth="2.2"
+          strokeWidth="3.85"
         />
         <text
           x={CX}

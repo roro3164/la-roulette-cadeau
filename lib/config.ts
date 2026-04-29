@@ -10,12 +10,17 @@ export const googleReviewUrl =
 export const reviewSkipEnabled =
   process.env.NEXT_PUBLIC_REVIEW_SKIP_ENABLED === "true";
 
+/** Préremplissage par défaut si `NEXT_PUBLIC_DEMO_REPLAY=true` (sans email explicite dans l’ENV). */
+const DEMO_GIFT_EMAIL_PREFILL = "romaindesigncode@gmail.com";
+
 /**
- * Champ e-mail prérempli (facultatif). Pour dev : `NEXT_PUBLIC_GIFT_EMAIL_PREFILL=vous@domaine.fr` dans `.env.local`.
- * Par défaut le champ reste vide — tout le monde peut saisir n’importe quelle adresse.
+ * Champ e-mail prérempli (facultatif).
+ * En **démo** (`NEXT_PUBLIC_DEMO_REPLAY=true`) : `DEMO_GIFT_EMAIL_PREFILL` si `NEXT_PUBLIC_GIFT_EMAIL_PREFILL` est absent ou vide.
+ * Sinon : uniquement `NEXT_PUBLIC_GIFT_EMAIL_PREFILL` (sinon champ vide).
  */
 export const giftEmailPrefill =
-  process.env.NEXT_PUBLIC_GIFT_EMAIL_PREFILL?.trim() ?? "";
+  process.env.NEXT_PUBLIC_GIFT_EMAIL_PREFILL?.trim() ||
+  (process.env.NEXT_PUBLIC_DEMO_REPLAY === "true" ? DEMO_GIFT_EMAIL_PREFILL : "");
 
 /**
  * Si `false` : aucun overlay « La roue dans N secondes » (chrono désactivé, logique intacte).

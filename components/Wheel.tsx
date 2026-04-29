@@ -286,12 +286,21 @@ export function Wheel({
         type="button"
         onClick={spin}
         disabled={spinning}
-        animate={{
-          y: 0,
-          scale: 1,
-        }}
-        transition={{ duration: 0 }}
-        className="min-h-[3.875rem] w-full max-w-[min(calc(100vw-env(safe-area-inset-right)-env(safe-area-inset-left)-1rem),20rem)] shrink-0 rounded-[1.0625rem] border-2 border-orange-950/85 bg-white px-4 py-[0.75rem] text-center align-middle text-[clamp(11px,2.8vw,13px)] font-black uppercase leading-none whitespace-nowrap tracking-[0.065em] text-orange-950 shadow-[0_13px_0_0_rgba(194,65,12,0.78),0_20px_40px_-10px_rgba(234,88,12,0.35)] outline-none transition [-webkit-tap-highlight-color:transparent] [touch-action:manipulation] active:translate-y-[5px] active:shadow-[0_8px_0_0_rgba(194,65,12,0.65)] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none max-sm:w-full sm:mx-auto sm:min-h-[3.875rem] sm:w-full sm:max-w-[20rem] sm:px-8 sm:py-[0.875rem] sm:text-[13px] sm:pb-[calc(env(safe-area-inset-bottom,0px)+2px)]"
+        animate={
+          spinning
+            ? { y: 0, scale: 1, rotate: 0 }
+            : {
+                y: [0, -16, 5, -16, 0],
+                scale: [1, 1.09, 1.04, 1.08, 1],
+                rotate: [0, -1.8, 2, -1.2, 0],
+              }
+        }
+        transition={
+          spinning
+            ? { duration: 0.2 }
+            : { repeat: Infinity, duration: 1.35, ease: "easeInOut" }
+        }
+        className="min-h-[4.375rem] w-full max-w-[min(calc(100vw-env(safe-area-inset-right)-env(safe-area-inset-left)-1rem),22rem)] shrink-0 rounded-[1.25rem] border-2 border-orange-950/85 bg-white px-5 py-4 text-center align-middle text-[clamp(13px,3vw,15px)] font-black uppercase leading-none whitespace-nowrap tracking-[0.065em] text-orange-950 shadow-[0_15px_0_0_rgba(194,65,12,0.78),0_22px_44px_-10px_rgba(234,88,12,0.35)] outline-none transition [-webkit-tap-highlight-color:transparent] [touch-action:manipulation] active:translate-y-[6px] active:shadow-[0_9px_0_0_rgba(194,65,12,0.65)] disabled:cursor-not-allowed disabled:opacity-55 disabled:shadow-none max-sm:w-full sm:mx-auto sm:min-h-[4.375rem] sm:w-full sm:max-w-[22rem] sm:px-10 sm:py-4 sm:text-[15px] sm:pb-[calc(env(safe-area-inset-bottom,0px)+2px)]"
       >
         {spinning ? "Ça tourne…" : "Jouer la partie"}
       </motion.button>
@@ -312,7 +321,7 @@ export function Wheel({
     !suppressSpinButton ? (
       createPortal(
         <div className="pointer-events-none fixed inset-x-0 bottom-0 left-auto right-0 z-[60] flex justify-end">
-          <div className="pointer-events-auto mr-[max(0.35rem,env(safe-area-inset-right))] mb-[env(safe-area-inset-bottom,0px)] ml-2 mt-0 flex w-auto max-w-[min(calc(100vw-env(safe-area-inset-right)-env(safe-area-inset-left)-0.75rem),20rem)] -translate-y-8 flex-col items-end gap-2">
+          <div className="pointer-events-auto mr-[max(0.35rem,env(safe-area-inset-right))] mb-[env(safe-area-inset-bottom,0px)] ml-2 mt-0 flex w-auto max-w-[min(calc(100vw-env(safe-area-inset-right)-env(safe-area-inset-left)-0.75rem),22rem)] -translate-x-8 -translate-y-8 flex-col items-end gap-2">
             {spinCluster}
           </div>
         </div>,
@@ -331,14 +340,14 @@ export function Wheel({
     >
       {/* Mobile HeyPulse · bande pleine largeur centrée comme avant */}
       <div className="max-sm:relative max-sm:left-1/2 max-sm:w-screen max-sm:-translate-x-1/2 max-sm:overflow-x-clip max-sm:overflow-y-visible sm:left-auto sm:w-full sm:translate-x-0 sm:overflow-visible sm:px-4 md:mx-auto md:max-w-[44rem] md:pb-24">
-        <div className="relative max-sm:flex max-sm:min-h-[min(96vw,82dvh)] max-sm:flex-col max-sm:items-stretch max-sm:pr-0 sm:grid sm:min-h-0 sm:grid-cols-[minmax(0,1fr),minmax(13rem,20rem)] sm:items-stretch sm:gap-x-4 sm:gap-y-11 sm:max-w-2xl sm:px-2 md:max-w-[44rem]">
+        <div className="relative max-sm:flex max-sm:min-h-[min(96vw,82dvh)] max-sm:flex-col max-sm:items-stretch max-sm:pr-0 sm:grid sm:min-h-0 sm:grid-cols-[minmax(0,1fr),minmax(14rem,23rem)] sm:items-stretch sm:gap-x-4 sm:gap-y-11 sm:max-w-2xl sm:px-2 md:max-w-[44rem]">
           {/* Zone roue */}
-          <div className="max-sm:pointer-events-none max-sm:absolute max-sm:inset-x-0 max-sm:top-[58%] max-sm:z-[1] max-sm:-translate-y-1/2 max-sm:overflow-visible sm:relative sm:inset-auto sm:top-auto sm:translate-y-0 sm:z-auto sm:flex sm:pointer-events-auto sm:justify-self-start sm:justify-start sm:py-10">
+          <div className="max-sm:pointer-events-none max-sm:absolute max-sm:inset-x-0 max-sm:top-[63.5%] max-sm:z-[1] max-sm:-translate-y-1/2 max-sm:overflow-visible sm:relative sm:inset-auto sm:top-auto sm:translate-y-0 sm:z-auto sm:flex sm:pointer-events-auto sm:justify-self-start sm:justify-start sm:py-10">
             <div
               ref={wheelBoxRef}
-              className="relative isolate aspect-square shrink-0 drop-shadow-[0_20px_48px_-10px_rgba(194,65,12,0.45)] max-sm:absolute max-sm:left-0 max-sm:top-1/2 max-sm:z-0 max-sm:w-[min(166vw,50rem)] max-sm:-translate-x-[43%] max-sm:-translate-y-1/2 sm:relative sm:left-auto sm:top-auto sm:z-auto sm:translate-x-0 sm:translate-y-0 sm:w-[27.25rem] md:w-[29.75rem]"
+              className="relative isolate aspect-square shrink-0 drop-shadow-[0_20px_48px_-10px_rgba(194,65,12,0.45)] max-sm:absolute max-sm:left-0 max-sm:top-1/2 max-sm:z-0 max-sm:w-[min(195vw,58rem)] max-sm:-translate-x-[43%] max-sm:-translate-y-1/2 sm:relative sm:left-auto sm:top-auto sm:z-auto sm:translate-x-0 sm:translate-y-0 sm:w-[32rem] md:w-[34.75rem]"
             >
-              <div className="absolute inset-0 z-1 flex items-center justify-center p-[1.5%]">
+              <div className="absolute inset-0 z-1 flex items-center justify-center p-0">
                 <motion.div
                   className="h-full w-full origin-center will-change-transform backface-hidden transform-[translateZ(0)] drop-shadow-[0_6px_24px_rgba(234,88,12,0.38)]"
                   style={{ rotate: rotation, transformOrigin: "50% 50%" }}
@@ -351,7 +360,7 @@ export function Wheel({
           </div>
 
           {!narrowForSpinPortal && !suppressSpinButton ? (
-            <div className="relative z-[6] mx-auto flex w-full max-w-[20rem] flex-col gap-2 sm:relative sm:h-full sm:min-h-0 sm:w-full sm:flex-col sm:justify-end sm:self-stretch sm:gap-3 sm:px-0 sm:pb-4 sm:pt-4 md:mx-auto sm:-translate-y-[min(1rem,3vh)]">
+            <div className="relative z-[6] mx-auto flex w-full max-w-[22rem] flex-col gap-2 sm:relative sm:h-full sm:min-h-0 sm:w-full sm:flex-col sm:justify-end sm:self-stretch sm:gap-3 sm:px-0 sm:pb-4 sm:pt-4 md:mx-auto sm:-translate-x-7 sm:-translate-y-[min(1rem,3vh)]">
               {spinCluster}
             </div>
           ) : null}

@@ -1,17 +1,16 @@
 import { HomeWithFlow } from "@/components/HomeWithFlow";
 
-/** Fond blanc ; texte orange / ambre lisible dessus. */
+/** Fond en dégradé doux blanc → crème / jaune → orange pêche. */
 export default function Home() {
   return (
-    <div className="relative isolate flex min-h-mobile-screen flex-col bg-white text-amber-950">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{
-          background: "linear-gradient(180deg,#ffffff 0%,#fefefe 100%)",
-        }}
-        aria-hidden
-      />
-      <div className="pointer-events-none absolute inset-0 playful-dots opacity-40" aria-hidden />
+    <div
+      className="relative isolate flex min-h-mobile-screen flex-col text-amber-950"
+      style={{
+        background:
+          "linear-gradient(168deg,#ffffff 0%,#fffbeb 18%,#fef9c3 42%,#fde68a 68%,#fdba74 88%,#fb923c 100%)",
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 playful-dots opacity-[0.28]" aria-hidden />
 
       <HomeWithFlow />
     </div>

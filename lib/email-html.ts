@@ -6,9 +6,16 @@ export function buildGiftEmailHtml(params: {
   openGiftUrl: string;
   /** URL absolue de l’illustration du lot (même visuel que la roue). */
   prizeImageAbsoluteUrl: string;
+  /** Logo établissement (même fichier que sur le site : `public/logo-bistrot-musees-header.webp`). */
+  establishmentLogoAbsoluteUrl: string;
 }): string {
-  const { prizeLabel, recipientName, openGiftUrl, prizeImageAbsoluteUrl } =
-    params;
+  const {
+    prizeLabel,
+    recipientName,
+    openGiftUrl,
+    prizeImageAbsoluteUrl,
+    establishmentLogoAbsoluteUrl,
+  } = params;
   const greeting =
     recipientName && recipientName.trim().length > 0
       ? `Bonjour ${escape(recipientName.trim())},`
@@ -19,6 +26,9 @@ export function buildGiftEmailHtml(params: {
 <head><meta charset="utf-8" /></head>
 <body style="font-family:system-ui,-apple-system,sans-serif;line-height:1.55;color:#431407;background:#fff7ed;margin:0;padding:24px;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:480px;margin:0 auto;background:#ffffff;border-radius:20px;padding:28px 24px;box-shadow:0 10px 40px rgba(194,65,12,0.12);border:1px solid #fed7aa;">
+    <tr><td align="center" style="padding-bottom:14px;">
+      <img src="${escape(establishmentLogoAbsoluteUrl)}" alt="" width="240" style="display:block;margin:0 auto;max-width:min(240px,92vw);height:auto;object-fit:contain;" />
+    </td></tr>
     <tr><td align="center" style="padding-bottom:16px;">
       <img src="${escape(prizeImageAbsoluteUrl)}" alt="" width="120" height="120" style="display:block;margin:0 auto;width:120px;height:120px;object-fit:contain;border-radius:16px;background:linear-gradient(145deg,#fffbeb,#ffedd5);" />
       <p style="margin:10px 0 0;font-size:13px;color:#78350f;text-align:center;line-height:1.4;">

@@ -5,8 +5,19 @@ import {
   signPlaySession,
   verifyPlaySession,
 } from "@/lib/play-session";
-import { SEGMENT_COUNT } from "@/lib/wheel-segments";
+import { SEGMENT_SPIN_WEIGHTS } from "@/lib/wheel-segments";
 import { SPIN } from "@/lib/user-messages";
+
+function weightedIndex(weights: readonly number[]): number {
+  const total = weights.reduce((a, b) => a + b, 0);
+  if (total <= 0) return 0;
+  let r = Math.random() * total;
+  for (let i = 0; i < weights.length; i++) {
+    r -= weights[i]!;
+    if (r < 0) return i;
+  }
+  return weights.length - 1;
+}
 
 /**
  * Tirage côté serveur : réservé à une session « débloquée » après l’avis (cookie signé).
@@ -29,7 +40,7 @@ export async function POST() {
     return Response.json({ error: SPIN.alreadyPlayed }, { status: 409 });
   }
 
-  const winningIndex = Math.floor(Math.random() * SEGMENT_COUNT);
+  const winningIndex = weightedIndex(SEGMENT_SPIN_WEIGHTS);
 
   const spun = createSpunPayload(p, winningIndex);
 

@@ -108,6 +108,7 @@ export async function POST(req: Request) {
     recipientName: name.length > 0 ? name : null,
     openGiftUrl,
     prizeImageAbsoluteUrl: `${origin}${prizeSrcForLabel(prizeLabel) ?? "/wheel/cadeau.png"}`,
+    establishmentLogoAbsoluteUrl: `${origin}/logo-bistrot-musees-header.webp`,
   });
 
   const from =
