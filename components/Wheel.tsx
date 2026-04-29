@@ -321,7 +321,7 @@ export function Wheel({
     !suppressSpinButton ? (
       createPortal(
         <div className="pointer-events-none fixed inset-x-0 bottom-0 left-auto right-0 z-[60] flex justify-end">
-          <div className="pointer-events-auto mb-[max(0.75rem,env(safe-area-inset-bottom,0px))] mr-[max(0.35rem,env(safe-area-inset-right))] ml-2 mt-0 flex w-auto max-w-[min(calc(100vw-env(safe-area-inset-right)-env(safe-area-inset-left)-0.75rem),22rem)] -translate-x-8 -translate-y-[min(5rem,18dvh)] flex-col items-end gap-2">
+          <div className="pointer-events-auto mb-[max(0.4rem,env(safe-area-inset-bottom,0px))] mr-[max(0.25rem,env(safe-area-inset-right))] ml-2 mt-0 flex w-auto max-w-[min(calc(100vw-env(safe-area-inset-right)-env(safe-area-inset-left)-0.5rem),22rem)] -translate-x-1 -translate-y-[min(1.75rem,6dvh)] flex-col items-end gap-2">
             {spinCluster}
           </div>
         </div>,
@@ -342,7 +342,7 @@ export function Wheel({
       <div className="max-sm:relative max-sm:left-1/2 max-sm:w-screen max-sm:-translate-x-1/2 max-sm:overflow-x-clip max-sm:overflow-y-visible sm:left-auto sm:w-full sm:translate-x-0 sm:overflow-visible sm:px-4 md:mx-auto md:max-w-[44rem] md:pb-24">
         <div className="relative max-sm:flex max-sm:min-h-[min(96vw,82dvh)] max-sm:flex-col max-sm:items-stretch max-sm:pr-0 sm:grid sm:min-h-0 sm:grid-cols-[minmax(0,1fr),minmax(13rem,20rem)] sm:items-stretch sm:gap-x-4 sm:gap-y-11 sm:max-w-2xl sm:px-2 md:max-w-[44rem]">
           {/* Zone roue */}
-          <div className="max-sm:pointer-events-none max-sm:absolute max-sm:inset-x-0 max-sm:top-[52%] max-sm:z-[1] max-sm:-translate-y-1/2 max-sm:overflow-visible sm:relative sm:inset-auto sm:top-auto sm:translate-y-0 sm:z-auto sm:flex sm:pointer-events-auto sm:justify-self-start sm:justify-start sm:py-10">
+          <div className="max-sm:pointer-events-none max-sm:absolute max-sm:inset-x-0 max-sm:top-[58%] max-sm:z-[1] max-sm:-translate-y-1/2 max-sm:overflow-visible sm:relative sm:inset-auto sm:top-auto sm:translate-y-0 sm:z-auto sm:flex sm:pointer-events-auto sm:justify-self-start sm:justify-start sm:py-10">
             <div
               ref={wheelBoxRef}
               className="relative isolate aspect-square shrink-0 drop-shadow-[0_20px_48px_-10px_rgba(194,65,12,0.45)] max-sm:absolute max-sm:left-0 max-sm:top-1/2 max-sm:z-0 max-sm:w-[min(166vw,50rem)] max-sm:-translate-x-[43%] max-sm:-translate-y-1/2 sm:relative sm:left-auto sm:top-auto sm:z-auto sm:translate-x-0 sm:translate-y-0 sm:w-[27.25rem] md:w-[29.75rem]"
