@@ -121,9 +121,16 @@ async function touchFirstOpenMsRedis(stableKey: string): Promise<{
 export async function peekOpenedAtMs(
   stableKey: string,
 ): Promise<number | undefined> {
-  const r = getGiftRedis();
-  if (r) {
-    return peekOpenedAtMsRedis(stableKey);
+  if (getGiftRedis()) {
+    try {
+      return await peekOpenedAtMsRedis(stableKey);
+    } catch (err) {
+      console.error(
+        "[gift-open-store] Redis indisponible ou identifiants erronés (peek) :",
+        err,
+      );
+      return peekOpenedAtMsFile(stableKey);
+    }
   }
   return peekOpenedAtMsFile(stableKey);
 }
@@ -133,9 +140,15 @@ export async function touchFirstOpenMs(stableKey: string): Promise<{
   openedAtMs: number;
   wasFirstOpen: boolean;
 }> {
-  const r = getGiftRedis();
-  if (r) {
-    return touchFirstOpenMsRedis(stableKey);
+  if (getGiftRedis()) {
+    try {
+      return await touchFirstOpenMsRedis(stableKey);
+    } catch (err) {
+      console.error(
+        "[gift-open-store] Redis indisponible ou identifiants erronés (touch) :",
+        err,
+      );
+    }
   }
   return touchFirstOpenMsFile(stableKey);
 }

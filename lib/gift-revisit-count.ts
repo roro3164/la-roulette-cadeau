@@ -45,10 +45,17 @@ export async function incrementRevisitPeekCount(
 ): Promise<number> {
   const r = getGiftRedis();
   if (r) {
-    const k = `${REV_REDIS_PREFIX}${stableKey}`;
-    const n = await r.incr(k);
-    await r.expire(k, TTL_SEC);
-    return n;
+    try {
+      const k = `${REV_REDIS_PREFIX}${stableKey}`;
+      const n = await r.incr(k);
+      await r.expire(k, TTL_SEC);
+      return n;
+    } catch (err) {
+      console.error(
+        "[gift-revisit-count] Redis indisponible ou identifiants erronés :",
+        err,
+      );
+    }
   }
   const data = loadRevFile();
   const prev = data[stableKey] ?? 0;
