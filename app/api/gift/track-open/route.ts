@@ -1,5 +1,10 @@
 import { GIFT_LINK_MAX_AGE_MS } from "@/lib/gift-config";
-import { giftOpenStableKey, peekOpenedAtMs, touchFirstOpenMs } from "@/lib/gift-open-store";
+import {
+  giftOpenStableKey,
+  peekOpenedAtMs,
+  touchFirstOpenMs,
+} from "@/lib/gift-open-store";
+import { incrementRevisitPeekCount } from "@/lib/gift-revisit-count";
 import { verifyGiftToken } from "@/lib/gift-token";
 
 const MAX_BODY = 8192;
@@ -47,8 +52,13 @@ export async function POST(req: Request) {
 
   if (intentRaw === "peek") {
     const ms = await peekOpenedAtMs(key);
+    let revisitPeekCount = 0;
+    if (ms !== undefined) {
+      revisitPeekCount = await incrementRevisitPeekCount(key);
+    }
     return Response.json({
       openedAtISO: ms !== undefined ? new Date(ms).toISOString() : null,
+      revisitPeekCount,
     });
   }
 

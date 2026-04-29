@@ -23,6 +23,8 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
   const [opened, setOpened] = useState(false);
   /** True si au chargement l’API indiquait déjà une première ouverture (lien revisité). */
   const [revisitFromPeek, setRevisitFromPeek] = useState(false);
+  /** Nombre de visites après enregistrement (appels peek successifs avec cadeau déjà ouvert). */
+  const [revisitPeekCount, setRevisitPeekCount] = useState(0);
   const [openedLine, setOpenedLine] = useState<string | null>(null);
   const [peekBusy, setPeekBusy] = useState(true);
   const [openingBusy, setOpeningBusy] = useState(false);
@@ -38,8 +40,18 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: trackingToken, intent: "peek" }),
         });
-        const data = (await res.json()) as { openedAtISO?: string | null };
+        const data = (await res.json()) as {
+          openedAtISO?: string | null;
+          revisitPeekCount?: number;
+        };
         if (cancelled || !res.ok) return;
+
+        const n =
+          typeof data.revisitPeekCount === "number" &&
+          Number.isFinite(data.revisitPeekCount)
+            ? Math.max(0, Math.floor(data.revisitPeekCount))
+            : 0;
+        setRevisitPeekCount(n);
 
         const label = formatOpenedFrFromIso(String(data.openedAtISO ?? ""));
         if (label) {
@@ -59,11 +71,16 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
   const finalizeOpenFromClick = useCallback(async () => {
     setOpeningBusy(true);
     try {
-      await fetch("/api/gift/track-open", {
+      const res = await fetch("/api/gift/track-open", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: trackingToken, intent: "open" }),
       });
+      const data = (await res.json()) as { openedAtISO?: string | null };
+      if (res.ok && data.openedAtISO) {
+        const label = formatOpenedFrFromIso(String(data.openedAtISO));
+        if (label) setOpenedLine(`Première ouverture : ${label}`);
+      }
     } catch {
       /* enregistrement best-effort : on affiche quand même le lot */
     } finally {
@@ -142,9 +159,6 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
           >
             {openingBusy ? "Enregistrement…" : "Touchez le paquet pour voir votre lot"}
           </motion.p>
-          <p className="max-w-[20rem] text-center text-[12px] leading-snug text-amber-900/72">
-            Une seule ouverture enregistrée par lien&nbsp;; la date et l’heure s’affichent ensuite si vous y revenez.
-          </p>
         </motion.div>
       ) : (
         <motion.div
@@ -215,7 +229,22 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
               {openedLine ? (
                 <p className="text-[15px] font-semibold leading-snug text-amber-950">{openedLine}</p>
               ) : null}
+              {revisitPeekCount >= 2 ? (
+                <p className="max-w-sm text-[12px] font-medium leading-snug text-amber-900/88">
+                  Ce cadeau a été consulté plus d’une fois depuis la première ouverture (
+                  {revisitPeekCount} visites enregistrées).
+                </p>
+              ) : null}
             </motion.div>
+          ) : openedLine ? (
+            <motion.p
+              className="text-[14px] font-semibold leading-snug text-amber-950/90"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.04 }}
+            >
+              {openedLine}
+            </motion.p>
           ) : null}
           <motion.h1
             className="text-2xl font-bold tracking-tight text-amber-950 sm:text-3xl"
