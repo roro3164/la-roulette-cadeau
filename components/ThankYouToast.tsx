@@ -34,10 +34,7 @@ export function ThankYouToast({ onDismiss }: Props) {
           id="toast-merci"
           className="mt-4 text-xl font-extrabold leading-snug text-amber-950"
         >
-          Merci pour votre participation&nbsp;!
-        </p>
-        <p className="mt-3 text-[15px] leading-snug text-amber-900/82">
-          À bientôt — le bon vous a été envoyé par e-mail.
+          Merci pour votre participation, à bientôt&nbsp;!
         </p>
         <button
           type="button"
