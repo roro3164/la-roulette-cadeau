@@ -24,7 +24,7 @@ export function ThankYouToast({ onDismiss }: Props) {
       onClick={onDismiss}
     >
       <div
-        className="max-w-sm cursor-default rounded-[1.75rem] border-2 border-amber-200/90 bg-white px-8 py-10 text-center shadow-[0_28px_48px_-18px_rgba(194,65,12,0.2)]"
+        className="max-w-sm cursor-default rounded-[1.75rem] border-2 border-amber-200/90 bg-white px-8 py-9 text-center shadow-[0_28px_48px_-18px_rgba(194,65,12,0.2)]"
         onClick={(e) => e.stopPropagation()}
       >
         <p className="text-3xl leading-none" aria-hidden>
@@ -34,14 +34,12 @@ export function ThankYouToast({ onDismiss }: Props) {
           id="toast-merci"
           className="mt-4 text-xl font-extrabold leading-snug text-amber-950"
         >
-          Bon envoyé !
+          Merci pour votre participation&nbsp;!
         </p>
-        <p className="mt-3 text-[15px] leading-relaxed text-amber-900/78">
-          Vous recevrez le lien du bon dans vos e-mails sous peu. Pensez aussi aux indésirables.
+        <p className="mt-3 text-[15px] leading-snug text-amber-900/82">
+          À bientôt — le bon vous a été envoyé par e-mail.
         </p>
-        <p className="mt-6 text-xs font-medium text-amber-800/55">
-          Toucher en dehors ferme · fermeture automatique
-        </p>
+        <p className="mt-5 text-[11px] text-amber-800/50">Touchez l’arrière-plan pour fermer</p>
       </div>
     </div>
   );

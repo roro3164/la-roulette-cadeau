@@ -43,7 +43,7 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
 
         const label = formatOpenedFrFromIso(String(data.openedAtISO ?? ""));
         if (label) {
-          setOpenedLine(`Ouvert le ${label}`);
+          setOpenedLine(`Première ouverture : ${label}`);
           setOpened(true);
           setRevisitFromPeek(true);
         }
@@ -59,33 +59,18 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
   const finalizeOpenFromClick = useCallback(async () => {
     setOpeningBusy(true);
     try {
-      const res = await fetch("/api/gift/track-open", {
+      await fetch("/api/gift/track-open", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: trackingToken, intent: "open" }),
       });
-      const data = (await res.json()) as { openedAtISO?: string };
-      if (res.ok && data.openedAtISO) {
-        const label = formatOpenedFrFromIso(data.openedAtISO);
-        if (label) {
-          setOpenedLine(`Ouvert le ${label}`);
-        }
-      } else if (!openedLine) {
-        const nowIso = new Date().toISOString();
-        const lbl = formatOpenedFrFromIso(nowIso);
-        if (lbl) setOpenedLine(`Ouvert le ${lbl}`);
-      }
-      setOpened(true);
     } catch {
-      if (!openedLine) {
-        const lbl = formatOpenedFrFromIso(new Date().toISOString());
-        if (lbl) setOpenedLine(`Ouvert le ${lbl} (approx.)`);
-      }
-      setOpened(true);
+      /* enregistrement best-effort : on affiche quand même le lot */
     } finally {
+      setOpened(true);
       setOpeningBusy(false);
     }
-  }, [openedLine, trackingToken]);
+  }, [trackingToken]);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-6 py-12 pb-[max(3rem,env(safe-area-inset-bottom,0px))] pt-[max(2.5rem,env(safe-area-inset-top,0px))] sm:py-16">
@@ -256,9 +241,6 @@ export function GiftOpenAnimation({ prizeLabel, trackingToken }: Props) {
           >
             {NEXT_VISIT_PRIZE_NOTE}
           </motion.p>
-          {!revisitFromPeek && openedLine ? (
-            <p className="text-[15px] font-semibold text-amber-950">{openedLine}</p>
-          ) : null}
         </motion.div>
       )}
     </div>

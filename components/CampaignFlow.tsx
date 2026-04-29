@@ -6,6 +6,7 @@ import { ReviewStep } from "@/components/ReviewStep";
 import { ThankYouToast } from "@/components/ThankYouToast";
 import { Wheel } from "@/components/Wheel";
 import { STORAGE_PARTICIPATION_DONE_KEY } from "@/lib/campaign-storage";
+import { demoReplayEnabled } from "@/lib/config";
 import { WHEEL_SEGMENTS } from "@/lib/wheel-segments";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -149,18 +150,16 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
         <ThankYouToast onDismiss={finalizeParticipation} />
       ) : null}
 
-      {step === "finished" ? (
-        <div className="flex min-h-[min(18rem,50svh)] w-full flex-col items-center justify-center rounded-3xl border-2 border-amber-200/95 bg-linear-to-br from-amber-50 via-orange-50/90 to-amber-100/70 px-7 py-14 text-center shadow-[0_14px_44px_-14px_rgba(194,65,12,0.2)]">
-          <span className="text-4xl leading-none" aria-hidden>
-            ✅
-          </span>
-          <p className="mt-6 text-2xl font-extrabold tracking-tight text-amber-950">
-            Merci&nbsp;!
-          </p>
-          <p className="mx-auto mt-4 max-w-[21rem] text-[15px] leading-relaxed text-amber-950/86">
-            Participation terminée — votre bon a été envoyé par e-mail. Ce message peut se cacher
-            dans les spams ou courriers indésirables.
-          </p>
+      {demoReplayEnabled && step === "finished" ? (
+        <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-[20000] flex -translate-x-1/2">
+          <button
+            type="button"
+            onClick={() => void restartParticipation()}
+            disabled={restartBusy}
+            className="rounded-full border-2 border-dashed border-amber-600/85 bg-linear-to-br from-orange-100 to-amber-100 px-6 py-3 text-sm font-black uppercase tracking-wide text-orange-950 shadow-xl ring-4 ring-orange-400/35 transition hover:brightness-[1.02] disabled:opacity-55"
+          >
+            {restartBusy ? "…" : "Démo · Rejouer"}
+          </button>
         </div>
       ) : null}
 

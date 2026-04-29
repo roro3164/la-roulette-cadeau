@@ -46,6 +46,10 @@ export function HomeWithFlow() {
               Un petit avis sur Google aide le lieu. Ensuite, tournez la roue&nbsp;: si vous gagnez, le bon part par e-mail.
             </p>
           </>
+        ) : flowStep === "finished" ? (
+          <p className="mx-auto mt-5 text-[15px] font-semibold text-orange-950/90">
+            Merci, à bientôt&nbsp;!
+          </p>
         ) : null}
       </header>
 

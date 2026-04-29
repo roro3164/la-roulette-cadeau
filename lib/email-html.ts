@@ -33,9 +33,12 @@ export function buildGiftEmailHtml(params: {
           Dévoiler le lot
         </a>
       </p>
-      <p style="margin:14px 0 0;font-size:12px;color:#92400e;line-height:1.45;text-align:center;">
-        Le bouton ouvre votre lot une fois&nbsp;: si vous revenez plus tard, vous voyez la date et l’heure ainsi que «&nbsp;<strong>Déjà ouvert</strong>&nbsp;» si besoin.
-      </p>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:14px 0 0;">
+        <tr><td style="padding:12px 10px;background:#fffbeb;border-radius:12px;font-size:12px;color:#78350f;line-height:1.5;text-align:left;border:1px solid #fcd34d;">
+          <p style="margin:0 0 8px;"><strong>Première fois</strong> après le bouton&nbsp;: votre lot apparaît <strong>une seule fois</strong> depuis ce lien (vous ne rejouez pas une deuxième fois).</p>
+          <p style="margin:0;"><strong>Ensuite</strong>, si vous rouvrez le même lien (même e-mail)&nbsp;: la page conserve votre lot et peut afficher <strong>le jour et l’heure</strong> de cette ouverture, avec le badge <strong>Déjà ouvert</strong> lorsque tout est déjà enregistré — c’est normal, votre avantage reste celui figurant dans ce message.</p>
+        </td></tr>
+      </table>
     </td></tr>
   </table>
   <p style="text-align:center;font-size:11px;color:#a16207;margin-top:14px;">

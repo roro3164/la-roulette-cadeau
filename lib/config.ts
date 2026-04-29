@@ -35,6 +35,10 @@ export const rouletteUnlockSeconds = (() => {
   return Math.max(0, Math.min(n, 120));
 })();
 
+/** Démo uniquement&nbsp;: bouton «&nbsp;Rejouer&nbsp;» après la fin pour relancer tout le flux. Production&nbsp;: laisser `false`. */
+export const demoReplayEnabled =
+  process.env.NEXT_PUBLIC_DEMO_REPLAY === "true";
+
 export function getAppOrigin(): string {
   if (typeof window !== "undefined") return window.location.origin;
   return (
