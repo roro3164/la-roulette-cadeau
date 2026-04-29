@@ -155,16 +155,19 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
         <ThankYouToast onDismiss={finalizeParticipation} />
       ) : null}
 
-      {demoReplayEnabled && step === "finished" ? (
-        <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-[20000] flex -translate-x-1/2">
+      {(demoReplayEnabled || isDev) && step === "finished" ? (
+        <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-[20000] flex w-[min(calc(100%-2rem),22rem)] -translate-x-1/2 flex-col items-center gap-2 px-3">
           <button
             type="button"
             onClick={() => void restartParticipation()}
             disabled={restartBusy}
-            className="rounded-full border-2 border-dashed border-amber-600/85 bg-linear-to-br from-orange-100 to-amber-100 px-6 py-3 text-sm font-black uppercase tracking-wide text-orange-950 shadow-xl ring-4 ring-orange-400/35 transition hover:brightness-[1.02] disabled:opacity-55"
+            className="w-full rounded-full border-2 border-dashed border-amber-600/85 bg-linear-to-br from-orange-100 to-amber-100 px-6 py-3 text-sm font-black uppercase tracking-wide text-orange-950 shadow-xl ring-4 ring-orange-400/35 transition hover:brightness-[1.02] disabled:opacity-55"
           >
-            {restartBusy ? "…" : "Démo · Rejouer"}
+            {restartBusy ? "…" : "Revenir à l’accueil · recommencer"}
           </button>
+          <p className="text-center text-[10px] font-medium uppercase tracking-wide text-amber-950/55">
+            Test / préprod uniquement · pas prévu avec les clients sur la version publique.
+          </p>
         </div>
       ) : null}
     </>
