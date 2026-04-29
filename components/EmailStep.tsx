@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { BistrotLogo } from "@/components/BistrotLogo";
 import { giftEmailPrefill } from "@/lib/config";
 import { NEXT_VISIT_PRIZE_NOTE } from "@/lib/wheel-segments";
 import { EMAIL_FORM } from "@/lib/user-messages";
 
 type Props = {
   prizeLabel: string;
-  onBack: () => void;
   /** Appelé uniquement lorsque l’API confirme l’envoi réel du message. */
   onSuccess: () => void;
 };
 
-export function EmailStep({ prizeLabel, onBack, onSuccess }: Props) {
+export function EmailStep({ prizeLabel, onSuccess }: Props) {
   const [email, setEmail] = useState(giftEmailPrefill);
   const [name, setName] = useState("");
   const [accepted, setAccepted] = useState(false);
@@ -74,12 +74,12 @@ export function EmailStep({ prizeLabel, onBack, onSuccess }: Props) {
             className="mx-auto flex w-full min-w-0 max-w-[min(100%,26.25rem)] shrink-0 flex-col rounded-[1.75rem] border-2 border-amber-100 bg-white p-5 shadow-[0_28px_48px_-18px_rgba(194,65,12,0.18)] sm:p-6"
           >
           <div className="text-center">
-            <span className="text-3xl" aria-hidden>
-              🎊
-            </span>
+            <div className="mx-auto flex max-h-[5rem] w-full max-w-[10.5rem] justify-center">
+              <BistrotLogo className="h-auto max-h-20 w-full object-contain object-center" />
+            </div>
             <h2
               id="email-title"
-              className="mt-1 text-xl font-extrabold tracking-tight text-amber-950"
+              className="mt-3 text-xl font-extrabold tracking-tight text-amber-950"
             >
               Bravo&nbsp;!
             </h2>
@@ -141,18 +141,11 @@ export function EmailStep({ prizeLabel, onBack, onSuccess }: Props) {
               {error}
             </p>
           ) : null}
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-            <button
-              type="button"
-              onClick={onBack}
-              className="order-2 min-h-[44px] rounded-full px-5 py-2.5 text-sm font-semibold text-amber-800/65 touch-manipulation transition hover:text-amber-950 sm:order-1"
-            >
-              Retour
-            </button>
+          <div className="mt-6">
             <button
               type="submit"
               disabled={loading}
-              className="order-1 min-h-[48px] w-full touch-manipulation rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/35 transition hover:brightness-105 enabled:active:scale-[0.99] disabled:opacity-60 sm:order-2 sm:w-auto"
+              className="min-h-[48px] w-full touch-manipulation rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/35 transition hover:brightness-105 enabled:active:scale-[0.99] disabled:opacity-60"
             >
               {loading ? "Envoi en cours…" : "Recevoir mon bon par e-mail"}
             </button>

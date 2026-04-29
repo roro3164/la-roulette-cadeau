@@ -147,7 +147,6 @@ export function CampaignFlow({ onStepChange }: Props = {}) {
       {step === "email" && wonLabel ? (
         <EmailStep
           prizeLabel={wonLabel}
-          onBack={() => setStep("wheel")}
           onSuccess={() => setStep("thanks")}
         />
       ) : null}

@@ -7,6 +7,7 @@ import {
   reviewStepCountdownEnabled,
   rouletteUnlockSeconds,
 } from "@/lib/config";
+import { BistrotLogo } from "@/components/BistrotLogo";
 import { GoogleStarsRow } from "@/components/GoogleStarsRow";
 
 type Props = {
@@ -149,13 +150,15 @@ export function ReviewStep({ onDone }: Props) {
         aria-labelledby="review-title"
       >
         <div className="my-auto w-full max-w-[min(100%,420px)] max-h-[min(100dvh-1.5rem,calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1.5rem))] overflow-y-auto rounded-[1.75rem] border-2 border-amber-200 bg-white p-6 shadow-[0_24px_60px_-15px_rgba(154,52,18,0.18)]">
+          <div className="mx-auto mb-5 flex max-w-[12rem] justify-center">
+            <BistrotLogo
+              className="h-auto max-h-16 w-full object-contain object-center sm:max-h-[4.25rem]"
+            />
+          </div>
           <h2
             id="review-title"
-            className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-amber-950"
+            className="text-center text-xl font-extrabold tracking-tight text-amber-950 sm:text-[1.35rem]"
           >
-            <span className="text-2xl" aria-hidden>
-              🤩
-            </span>
             Merci pour votre passage
           </h2>
           <ol className="mt-5 space-y-3">
@@ -165,7 +168,7 @@ export function ReviewStep({ onDone }: Props) {
                 className="flex gap-3 text-sm leading-snug text-amber-950/90"
               >
                 <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#facc15] to-[#ea580c] text-xs font-bold text-amber-950 shadow-sm"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#facc15] to-[#ea580c] text-xs font-bold text-amber-950 shadow-sm"
                   aria-hidden
                 >
                   {i + 1}
